@@ -17,8 +17,11 @@ public class MoveToPosition : MonoBehaviour
     }
 
     void Update(){
-        CurrentSpeed.SetValue(nma.velocity.magnitude);
-        IsMoving.SetValue(nma.velocity.magnitude > 1);
+        if (CurrentSpeed)
+            CurrentSpeed.SetValue(nma.velocity.magnitude);
+
+        if (IsMoving)
+            IsMoving.SetValue(nma.velocity.magnitude > 1);
     }
 
     public void NavigateToPosition () {
