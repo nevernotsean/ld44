@@ -15,16 +15,14 @@ public class HuntingBehavior : StateMachineBehaviour {
     }
 
     override public void OnStateUpdate (Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
-
         if (!nma.pathPending && !nma.hasPath) {
-            Debug.Log ("I have reached my destination!");
-            // Code that you want to execute when this event occurs.
+            Debug.Log ("I have reached my destination! nextToCapturePoint");
         } else {
-            if (timeHunting > 5.0f && !animator.GetBool ("isWandering")) {
-                Debug.Log ("I give up hunting!");
+            if (timeHunting > 500.0f && !animator.GetBool ("isWandering")) {
+                Debug.Log ("I give up hunting! gonna wander...");
                 animator.SetBool ("isWandering", true);
             } else {
-                timeHunting = timeHunting + Time.deltaTime * 50;
+                timeHunting = timeHunting + Time.deltaTime;
             }
         }
     }

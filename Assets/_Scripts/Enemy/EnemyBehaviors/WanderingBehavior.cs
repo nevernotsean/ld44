@@ -11,7 +11,7 @@ public class WanderingBehavior : StateMachineBehaviour {
     float timeIdle = 0.0f;
 
     override public void OnStateEnter (Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
-        Debug.Log ("OnStateEnter IDLE");
+        // Debug.Log ("OnStateEnter IDLE");
 
         // Init refs and vals
         nma = animator.gameObject.GetComponent<NavMeshAgent> ();
@@ -20,6 +20,8 @@ public class WanderingBehavior : StateMachineBehaviour {
 
         // Trigger Idle Status
         animator.gameObject.SendMessage ("SetStatusWandering", true);
+
+        WanderToRandomPoint ();
     }
 
     override public void OnStateUpdate (Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {

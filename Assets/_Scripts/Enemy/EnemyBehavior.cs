@@ -47,7 +47,6 @@ public class EnemyBehavior : MonoBehaviour {
     }
 
     private void OnDrawGizmos () {
-
         if (nma.hasPath) {
             Gizmos.DrawCube (nma.destination, Vector3.one * 3);
         }
@@ -57,55 +56,29 @@ public class EnemyBehavior : MonoBehaviour {
         print ("HEY LISTEN " + other.gameObject.name);
         if (other.gameObject == currentCapturePoint) {
             print ("I triggered my selected capture point");
+            anim.SetBool ("NextToCapturePoint", true);
         }
     }
 
     private void OnTriggerExit (Collider other) {
-        print ("BYEEE" + other.gameObject.name);
+        if (other.gameObject == currentCapturePoint) {
+            print ("BYEEE " + other.gameObject.name);
+            anim.SetBool ("NextToCapturePoint", false);
+        }
     }
 
-    // private void OnCollisionEnter (Collision other) {
-    //     if (other.gameObject.tag == "MoneyCapture") {
-    //         print ("HIT " + other.gameObject.tag);
-
-    //         GetComponent<Rigidbody> ().velocity = Vector3.zero;
-    //         nma.SetDestination (transform.position);
-
-    //         anim.SetBool ("NextToCapturePoint", true);
-    //     }
-
-    //     if (other.gameObject.tag == "Enemy") {
-    //         print ("HIT " + other.gameObject.tag);
-
-    //         GetComponent<Rigidbody> ().velocity = Vector3.zero;
-    //         nma.SetDestination (transform.position);
-    //     }
-    // }
-
-    // private void OnCollisionExit (Collision other) {
-    //     if (other.gameObject.tag == "MoneyCapture") {
-    //         anim.SetBool ("NextToCapturePoint", false);
-    //     }
-
-    //     if (other.gameObject.tag == "Enemy") {
-    //         print ("HIT " + other.gameObject.tag);
-
-    //         if (currentCapturePoint)
-    //             nma.SetDestination (currentCapturePoint.transform.position);
-    //     }
-    // }
     /* 
     // Status Methods
     */
     public void SetStatusAttacking (bool active) {
-        print ("statusAttacking " + active);
+        // print ("statusAttacking " + active);
         statusAttacking.SetActive (active);
 
         // if (active)
     }
 
     public void SetStatusEscaping (bool active) {
-        print ("statusEscaping " + active);
+        // print ("statusEscaping " + active);
         statusEscaping.SetActive (active);
 
         if (active) {
@@ -114,7 +87,7 @@ public class EnemyBehavior : MonoBehaviour {
     }
 
     public void SetStatusHunting (bool active) {
-        print ("statusHunting " + active);
+        // print ("statusHunting " + active);
         statusHunting.SetActive (active);
 
         if (active) {
@@ -123,14 +96,14 @@ public class EnemyBehavior : MonoBehaviour {
     }
 
     public void SetStatusFleeing (bool active) {
-        print ("statusFleeing " + active);
+        // print ("statusFleeing " + active);
         statusFleeing.SetActive (active);
 
         // if (active)
     }
 
     public void SetStatusWandering (bool active) {
-        print ("statusIdle " + active);
+        // print ("statusIdle " + active);
         statusWandering.SetActive (active);
 
         // if (active)

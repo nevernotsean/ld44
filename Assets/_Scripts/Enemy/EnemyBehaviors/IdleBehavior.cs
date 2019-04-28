@@ -19,9 +19,9 @@ public class IdleBehavior : StateMachineBehaviour {
 		// Trigger Idle Status
 		animator.gameObject.SendMessage ("HideAllStatus");
 
-		// reset the nav destination
-		nma.velocity = Vector3.zero;
-		nma.SetDestination (animator.gameObject.transform.position);
+		// // reset the nav destination
+		// nma.velocity = Vector3.zero;
+		// nma.SetDestination (animator.gameObject.transform.position);
 	}
 
 	override public void OnStateUpdate (Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
