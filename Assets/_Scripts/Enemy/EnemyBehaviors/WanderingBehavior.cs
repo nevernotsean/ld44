@@ -8,7 +8,7 @@ public class WanderingBehavior : StateMachineBehaviour {
     // public GameObject effect;
     NavMeshAgent nma;
     Bounds wanderingArea;
-    float timeIdle = 0.0f;
+    float timer = 0.0f;
 
     override public void OnStateEnter (Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
         // Debug.Log ("OnStateEnter IDLE");
@@ -16,7 +16,7 @@ public class WanderingBehavior : StateMachineBehaviour {
         // Init refs and vals
         nma = animator.gameObject.GetComponent<NavMeshAgent> ();
         wanderingArea = GameObject.FindWithTag ("WanderingArea").GetComponent<BoxCollider> ().bounds;
-        timeIdle = 0.0f;
+        timer = 0.0f;
 
         // Trigger Idle Status
         animator.gameObject.SendMessage ("SetStatusWandering", true);
@@ -27,17 +27,17 @@ public class WanderingBehavior : StateMachineBehaviour {
     override public void OnStateUpdate (Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
 
         if (!nma.pathPending && !nma.hasPath && animator.GetBool ("isWandering")) {
-            Debug.Log ("I have reached my destination!");
+            // Debug.Log ("I have reached my destination!");
             // Code that you want to execute when this event occurs.
             animator.SetBool ("isWandering", false);
         }
 
-        // After 5 seconds of Idleing, stop Idleing
-        if (timeIdle > 5.0f && animator.GetBool ("isWandering")) {
-            Debug.Log ("I'm done idleing");
+        // After 5 seconds, stop
+        if (timer > 5.0f && animator.GetBool ("isWandering")) {
+            // Debug.Log ("I'm done wandering");
             animator.SetBool ("isWandering", false);
         } else {
-            timeIdle = timeIdle + Time.deltaTime;
+            timer = timer + Time.deltaTime;
         }
     }
 

@@ -45,13 +45,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SceneIntensity: {fileID: 11400000, guid: c72fca5d0ed2547029bffb06db1b5491, type: 2}
   Tracks:
-  - {fileID: 8300000, guid: 6a49e23d434d04a39b7611141f5e1715, type: 3}
-  - {fileID: 8300000, guid: 9a101a92cc39444e4a644f70cf0afc88, type: 3}
-  - {fileID: 8300000, guid: 36a2b293786dd40359fd15e86ecb0045, type: 3}
-  - {fileID: 8300000, guid: 60c636c7f5ae34779993a8bcba64afa7, type: 3}
-  - {fileID: 8300000, guid: a79cc4e3d7aab4e9f8234b9c9aeab856, type: 3}
-  - {fileID: 8300000, guid: 20a48138ae1e14779800bfea10b649e5, type: 3}
-  - {fileID: 8300000, guid: 0e6dab3f7120141c0ac8e01bc08f17d3, type: 3}
-  - {fileID: 8300000, guid: d9eaa70b657a14c8fb63538c5d494740, type: 3}
-  - {fileID: 8300000, guid: 4b03697e81e1848e3bf5c6d2ac37ed0a, type: 3}
-  - {fileID: 8300000, guid: b9e289f836ea4447598f2ccc3998fdcf, type: 3}
+  - {fileID: 8300000, guid: 8658be564b37d48b1a59eede2dba892d, type: 3}
+  - {fileID: 8300000, guid: 57512f9972289489ba55cc89ef1993a1, type: 3}
+  - {fileID: 8300000, guid: 3a26f91a6702e423ea74e1e9ccb7ee94, type: 3}
+  - {fileID: 8300000, guid: e8190edc32e5d4dc5a18165e58ff6dff, type: 3}
+  - {fileID: 8300000, guid: 8801a1220fbaa4b7daa2744e5493c36d, type: 3}
+  - {fileID: 8300000, guid: f472a6fe776f94822bb4231d8c053ffb, type: 3}
+  - {fileID: 8300000, guid: 626eea2451fc9488ab74aa84d508642b, type: 3}

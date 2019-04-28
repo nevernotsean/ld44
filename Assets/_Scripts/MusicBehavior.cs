@@ -8,6 +8,8 @@ public class MusicBehavior : MonoBehaviour {
 
     AudioSource[] audioSources;
 
+    public float onVolume = 0.7f;
+
     void Start () {
         SceneIntensity.SetValue (0);
 
@@ -27,10 +29,10 @@ public class MusicBehavior : MonoBehaviour {
 
     void UpdateMusic () {
         for (int i = 0; i < audioSources.Length; i++) {
-            if (SceneIntensity.Value > i) {
-                audioSources[i].volume = 1;
+            if (SceneIntensity.Value >= i) {
+                audioSources[i].volume = onVolume;
             } else {
-                audioSources[i].volume = 0;
+                audioSources[i].volume = 0f;
             }
         }
     }

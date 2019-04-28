@@ -319,6 +319,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 98138440beb1a409b8a8ca0bf707a788, type: 3}
   - {fileID: 8300000, guid: d8ffb016e500a4912b8ef82c622cd5fc, type: 3}
   - {fileID: 8300000, guid: 2d3dacecb9b0a4ebaa33f3c847cb92d1, type: 3}
+  attackDamage: 200
 --- !u!82 &7337314454551737133
 AudioSource:
   m_ObjectHideFlags: 0

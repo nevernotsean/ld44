@@ -5,6 +5,7 @@ using UnityEngine.AI;
 
 public class AttackingBehavior : StateMachineBehaviour {
     NavMeshAgent nma;
+    bool isFull = false;
     float timeAttacking = 0.0f;
 
     override public void OnStateEnter (Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
@@ -21,8 +22,13 @@ public class AttackingBehavior : StateMachineBehaviour {
                 pct = pct + 1;
                 animator.SetInteger ("walletFullPercent", pct);
                 animator.gameObject.SendMessage ("UpdateAttackProgress", pct);
-
+            } else {
+                if (!isFull) {
+                    animator.gameObject.SendMessage ("DamagePlayer");
+                    isFull = true;
+                }
             }
+
         } else {
             timeAttacking = timeAttacking + Time.deltaTime;
         }

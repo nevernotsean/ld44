@@ -25,7 +25,7 @@ public class EnemyBehavior : MonoBehaviour {
     public AudioClip[] screamSounds;
 
     float distanceFromSpawnPoint;
-    int attackDamage = 100;
+    public int attackDamage = 100;
 
     int holdingCash = 0;
 

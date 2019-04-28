@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: PlayerHealth
   m_EditorClassIdentifier: 
   DeveloperDescription: 
-  value: -800
-  oldValue: -700
+  value: 1000000
+  oldValue: 0
   Changed: {fileID: 0}
   ChangedWithHistory: {fileID: 0}
