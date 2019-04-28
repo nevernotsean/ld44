@@ -1,30 +1,59 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class IdleBehavior : StateMachineBehaviour {
 
 	// public GameObject effect;
+	NavMeshAgent nma;
+	Bounds wanderingArea;
+	float timeIdle = 0.0f;
 
 	override public void OnStateEnter (Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
-		// Debug.Log ("OnStateEnter IDLE");
+		Debug.Log ("OnStateEnter IDLE");
+
+		// Init refs and vals
+		nma = animator.gameObject.GetComponent<NavMeshAgent> ();
+		wanderingArea = GameObject.FindWithTag ("WanderingArea").GetComponent<BoxCollider> ().bounds;
+		timeIdle = 0.0f;
+
+		// Trigger Idle Status
+		animator.gameObject.SendMessage ("SetStatusIdle", true);
 	}
 
 	override public void OnStateUpdate (Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
 
+		if (!nma.pathPending && !nma.hasPath) {
+			Debug.Log ("I have reached my destination!");
+			// Code that you want to execute when this event occurs.
+			animator.SetBool ("isWandering", false);
+		}
+
+		// After 5 seconds of Idleing, stop Idleing
+		if (timeIdle > 5.0f) {
+			Debug.Log ("I'm done idleing");
+			animator.SetBool ("isWandering", false);
+		} else {
+			timeIdle = timeIdle + Time.deltaTime;
+		}
 	}
 
 	override public void OnStateExit (Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
-		// Instantiate (effect, animator.transform.position, Quaternion.identity);
+		animator.gameObject.SendMessage ("SetStatusIdle", false);
 	}
 
-	// OnStateMove is called right after Animator.OnAnimatorMove(). Code that processes and affects root motion should be implemented here
-	//override public void OnStateMove(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
-	//
-	//}
+	void WanderToRandomPoint () {
+		var dest = RandomPointInBounds (wanderingArea);
 
-	// OnStateIK is called right after Animator.OnAnimatorIK(). Code that sets up animation IK (inverse kinematics) should be implemented here.
-	//override public void OnStateIK(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
-	//
-	//}
+		nma.SetDestination (dest);
+	}
+
+	public static Vector3 RandomPointInBounds (Bounds bounds) {
+		return new Vector3 (
+			Random.Range (bounds.min.x, bounds.max.x),
+			Random.Range (bounds.min.y, bounds.max.y),
+			Random.Range (bounds.min.z, bounds.max.z)
+		);
+	}
 }

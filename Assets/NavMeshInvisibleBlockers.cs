@@ -2,14 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerBehavior : MonoBehaviour {
-    public AudioClip jumpSound;
-    public AudioClip jumpChargeSound;
-    public AudioClip landSound;
-
+public class NavMeshInvisibleBlockers : MonoBehaviour {
     // Start is called before the first frame update
     void Start () {
-
+        foreach (var child in GetComponentsInChildren<MeshRenderer> ()) {
+            child.enabled = false;
+        }
     }
 
     // Update is called once per frame

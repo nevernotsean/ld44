@@ -37,7 +37,7 @@ public class EnemySpawner : MonoBehaviour {
 
         while (!waveSpawned) {
             for (int i = 0; i < waveAmount; i++) {
-                Vector3 c = Random.insideUnitCircle * 10;
+                Vector3 c = Random.insideUnitCircle * 5;
                 Vector3 pos = SpawnPoint.position + new Vector3 (c.x, 0, c.y);
 
                 var newEnemy = Instantiate (EnemyPrefab, pos, Quaternion.identity);
