@@ -299,6 +299,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 075fbb44861b44122a51c757ec634784, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  escapePoint: {fileID: 0}
   CapturePointsList: {fileID: 11400000, guid: 1a7cb991a6c3041a2b120ba8dc0914fc, type: 2}
   statusAttacking: {fileID: 2074426327785578905}
   statusEscaping: {fileID: 4661379152241557002}

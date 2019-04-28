@@ -7,14 +7,18 @@ public class EnemyBehavior : MonoBehaviour {
     GameObject player;
     Animator anim;
     NavMeshAgent nma;
-
-    public GameObject escapePoint;
+    GameObject escapePoint;
 
     public UnityAtoms.GameObjectList CapturePointsList;
     public GameObject statusAttacking;
     public GameObject statusEscaping;
     public GameObject statusHunting;
     public GameObject statusFleeing;
+
+    [HideInInspector] GameObject currentCapturePoint;
+
+    public AudioClip[] dieSounds;
+    public AudioClip[] screamSounds;
 
     float distanceFromSpawnPoint;
 
@@ -23,6 +27,7 @@ public class EnemyBehavior : MonoBehaviour {
         nma = GetComponent<NavMeshAgent> ();
         anim = GetComponent<Animator> ();
         anim.SetInteger ("walletFullPercent", 0);
+        escapePoint = GameObject.FindWithTag ("ExitPoint");
     }
 
     void Update () {
@@ -47,12 +52,21 @@ public class EnemyBehavior : MonoBehaviour {
 
         if (other.gameObject.tag == "Enemy") {
             print ("HIT " + other.gameObject.tag);
+
+            GetComponent<Rigidbody> ().velocity = Vector3.zero;
+            nma.SetDestination (transform.position);
         }
     }
 
     private void OnCollisionExit (Collision other) {
         if (other.gameObject.tag == "MoneyCapture") {
             anim.SetBool ("NextToCapturePoint", false);
+        }
+
+        if (other.gameObject.tag == "Enemy") {
+            print ("HIT " + other.gameObject.tag);
+
+            nma.SetDestination (currentCapturePoint.transform.position);
         }
     }
     /* 
@@ -79,8 +93,9 @@ public class EnemyBehavior : MonoBehaviour {
         // print ("statusHunting " + active);
         statusHunting.SetActive (active);
 
-        if (active)
-            GotoClosestCapture ();
+        if (active) {
+            StartCoroutine ("SeekAvailableCapturePoint");
+        }
     }
 
     public void SetStatusFleeing (bool active) {
@@ -94,6 +109,8 @@ public class EnemyBehavior : MonoBehaviour {
 
         var pct = anim.GetInteger ("walletFullPercent");
 
+        currentCapturePoint.GetComponent<CapturePointBehavior> ().isBusy = true;
+
         while (pct < 100) {
 
             yield return new WaitForSeconds (0.01f);
@@ -106,6 +123,24 @@ public class EnemyBehavior : MonoBehaviour {
 
             yield return null;
         }
+
+        currentCapturePoint.GetComponent<CapturePointBehavior> ().isBusy = false;
+    }
+
+    IEnumerator SeekAvailableCapturePoint () {
+        var pct = anim.GetInteger ("walletFullPercent");
+        while (pct < 100) {
+
+            GotoClosestCapture (true);
+
+            yield return new WaitForSeconds (5);
+
+            pct = anim.GetInteger ("walletFullPercent");
+
+            yield return null;
+        }
+
+        print ("DONE");
     }
     /* 
     // Action methods
@@ -126,20 +161,29 @@ public class EnemyBehavior : MonoBehaviour {
         CapturePointsList.Clear ();
     }
 
-    public void GotoClosestCapture () {
-        GameObject destination = FindClosestCapture (transform.position, CapturePointsList.List);
-        nma.SetDestination (destination.transform.position);
+    public void GotoClosestCapture (bool limitToNotBusy) {
+        FindClosestCapture (transform.position, CapturePointsList.List, limitToNotBusy);
+
+        if (currentCapturePoint == null) {
+            FindClosestCapture (transform.position, CapturePointsList.List, false);
+        }
+
+        nma.SetDestination (currentCapturePoint.transform.position);
     }
 
     /* 
         Utils 
     */
     // Returns the closest GameObject
-    GameObject FindClosestCapture (Vector3 origin, List<GameObject> points) {
+    public void FindClosestCapture (Vector3 origin, List<GameObject> points, bool limitToNotBusy) {
         GameObject closestPoint = null;
         var distance = 10000.0f;
 
         foreach (var point in points) {
+            if (limitToNotBusy) {
+                if (point.GetComponent<CapturePointBehavior> ().isBusy)
+                    continue;
+            }
             var thisDist = Vector3.Distance (origin, point.transform.position);
 
             // Debug.Log (point.name + " distance is" + distance);
@@ -150,6 +194,6 @@ public class EnemyBehavior : MonoBehaviour {
             }
         }
 
-        return closestPoint;
+        currentCapturePoint = closestPoint;
     }
 }

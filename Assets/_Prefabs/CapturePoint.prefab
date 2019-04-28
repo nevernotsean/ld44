@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 490770064365403946}
   - component: {fileID: 490770064365403949}
   - component: {fileID: 490770064365403948}
+  - component: {fileID: 1080649709624025229}
   m_Layer: 0
   m_Name: CapturePoint
   m_TagString: MoneyCapture
@@ -89,5 +90,18 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 3.3622952, y: 7.215619, z: 4.81429}
+  m_Center: {x: 0, y: 0, z: 0.0010008812}
+--- !u!114 &1080649709624025229
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 490770064365403951}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02a4a8bcad0bc45edb4dba156e6c2975, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isBusy: 0
