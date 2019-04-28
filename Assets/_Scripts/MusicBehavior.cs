@@ -27,7 +27,7 @@ public class MusicBehavior : MonoBehaviour {
 
     void UpdateMusic () {
         for (int i = 0; i < audioSources.Length; i++) {
-            if (SceneIntensity.Value >= i) {
+            if (SceneIntensity.Value > i) {
                 audioSources[i].volume = 1;
             } else {
                 audioSources[i].volume = 0;

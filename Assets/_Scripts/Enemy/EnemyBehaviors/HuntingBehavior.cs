@@ -19,14 +19,13 @@ public class HuntingBehavior : StateMachineBehaviour {
         if (!nma.pathPending && !nma.hasPath) {
             Debug.Log ("I have reached my destination!");
             // Code that you want to execute when this event occurs.
-            animator.SetBool ("NextToCapturePoint", true);
-        }
-
-        if (timeHunting > 5.0f) {
-            Debug.Log ("I give up!");
-            animator.SetBool ("isWandering", true);
         } else {
-            timeHunting = timeHunting + Time.deltaTime;
+            if (timeHunting > 5.0f && !animator.GetBool ("isWandering")) {
+                Debug.Log ("I give up hunting!");
+                animator.SetBool ("isWandering", true);
+            } else {
+                timeHunting = timeHunting + Time.deltaTime * 50;
+            }
         }
     }
 

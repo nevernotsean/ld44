@@ -1,21 +1,34 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class AttackingBehavior : StateMachineBehaviour {
-    // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
+    NavMeshAgent nma;
+    float timeAttacking = 0.0f;
+
     override public void OnStateEnter (Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
-        Debug.Log ("OnStateEnter ATTACKING");
+        // Debug.Log ("OnStateEnter ATTACKING");
         animator.gameObject.SendMessage ("SetStatusAttacking", true);
+        nma = animator.gameObject.GetComponent<NavMeshAgent> ();
     }
 
-    // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate (Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
+        if (timeAttacking > 1.0f && !animator.GetBool ("isWandering")) {
+            var pct = animator.GetInteger ("walletFullPercent");
 
+            if (pct < 100) {
+                pct = pct + 1;
+                animator.SetInteger ("walletFullPercent", pct);
+                animator.gameObject.SendMessage ("UpdateAttackProgress", pct);
+
+            }
+        } else {
+            timeAttacking = timeAttacking + Time.deltaTime;
+        }
     }
 
     override public void OnStateExit (Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
-        // Instantiate (effect, animator.transform.position, Quaternion.identity);
         animator.gameObject.SendMessage ("SetStatusAttacking", false);
     }
 }

@@ -26,6 +26,8 @@ public class EnemyBehavior : MonoBehaviour {
     float distanceFromSpawnPoint;
     int attackDamage = 100;
 
+    int holdingCash = 0;
+
     void Start () {
         player = GameObject.FindWithTag ("Player");
         nma = GetComponent<NavMeshAgent> ();
@@ -42,6 +44,24 @@ public class EnemyBehavior : MonoBehaviour {
                 anim.SetBool ("isSpooked", false);
             }
         }
+    }
+
+    private void OnDrawGizmos () {
+
+        if (nma.hasPath) {
+            Gizmos.DrawCube (nma.destination, Vector3.one * 3);
+        }
+    }
+
+    private void OnTriggerEnter (Collider other) {
+        print ("HEY LISTEN " + other.gameObject.name);
+        if (other.gameObject == currentCapturePoint) {
+            print ("I triggered my selected capture point");
+        }
+    }
+
+    private void OnTriggerExit (Collider other) {
+        print ("BYEEE" + other.gameObject.name);
     }
 
     // private void OnCollisionEnter (Collision other) {
@@ -81,8 +101,7 @@ public class EnemyBehavior : MonoBehaviour {
         print ("statusAttacking " + active);
         statusAttacking.SetActive (active);
 
-        if (active)
-            StartCoroutine ("Attack");
+        // if (active)
     }
 
     public void SetStatusEscaping (bool active) {
@@ -105,61 +124,32 @@ public class EnemyBehavior : MonoBehaviour {
 
     public void SetStatusFleeing (bool active) {
         print ("statusFleeing " + active);
+        statusFleeing.SetActive (active);
 
-        if (active)
-            statusFleeing.SetActive (active);
+        // if (active)
     }
 
-    public void SetStatusIdle (bool active) {
+    public void SetStatusWandering (bool active) {
         print ("statusIdle " + active);
+        statusWandering.SetActive (active);
 
-        if (active)
-            statusFleeing.SetActive (active);
+        // if (active)
+
     }
 
-    IEnumerator Attack () {
-
-        var pct = anim.GetInteger ("walletFullPercent");
-
-        currentCapturePoint.GetComponent<CapturePointBehavior> ().isBusy = true;
-
-        while (pct < 100) {
-
-            yield return new WaitForSeconds (0.01f);
-
-            pct = pct + 1;
-
-            anim.SetInteger ("walletFullPercent", pct);
-
-            statusAttacking.GetComponent<TMPro.TextMeshPro> ().SetText ((pct).ToString ("N0"));
-
-            yield return null;
-        }
-
-        currentCapturePoint.GetComponent<CapturePointBehavior> ().isBusy = false;
-
-        PlayerHealth.SetValue (PlayerHealth.Value - attackDamage);
+    public void HideAllStatus () {
+        SetStatusAttacking (false);
+        SetStatusEscaping (false);
+        SetStatusHunting (false);
+        SetStatusFleeing (false);
+        SetStatusWandering (false);
     }
 
-    // IEnumerator SeekAvailableCapturePoint () {
-    //     var pct = anim.GetInteger ("walletFullPercent");
-    //     while (pct < 100) {
-
-    //         GotoClosestCapture (true);
-
-    //         yield return new WaitForSeconds (5);
-
-    //         pct = anim.GetInteger ("walletFullPercent");
-
-    //         yield return null;
-    //     }
-
-    //     print ("DONE");
-    // }
     /* 
     // Action methods
     */
     public void Die () {
+        HealPlayer ();
         Destroy (gameObject);
     }
 
@@ -185,9 +175,23 @@ public class EnemyBehavior : MonoBehaviour {
         nma.SetDestination (currentCapturePoint.transform.position);
     }
 
+    public void DamagePlayer () {
+        PlayerHealth.SetValue (PlayerHealth.Value - attackDamage);
+        holdingCash = attackDamage;
+    }
+
+    public void HealPlayer () {
+        PlayerHealth.SetValue (PlayerHealth.Value + holdingCash);
+        holdingCash = 0;
+    }
+
     /* 
         Utils 
     */
+    public void UpdateAttackProgress (int pct) {
+        statusAttacking.GetComponent<TMPro.TextMeshPro> ().SetText ((pct).ToString ("N0"));
+    }
+
     // Returns the closest GameObject
     public void FindClosestCapture (Vector3 origin, List<GameObject> points, bool limitToNotBusy) {
         GameObject closestPoint = null;

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SceneIntensity
   m_EditorClassIdentifier: 
   DeveloperDescription: 
-  value: 4
-  oldValue: 0
+  value: 0
+  oldValue: 9
   Changed: {fileID: 0}
   ChangedWithHistory: {fileID: 0}
