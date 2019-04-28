@@ -19,15 +19,15 @@ public class IdleBehavior : StateMachineBehaviour {
 		// Trigger Idle Status
 		animator.gameObject.SendMessage ("HideAllStatus");
 
-		// // reset the nav destination
-		// nma.velocity = Vector3.zero;
-		// nma.SetDestination (animator.gameObject.transform.position);
+		// reset the nav destination
+		// nma.isStopped = true;
 	}
 
 	override public void OnStateUpdate (Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
 		// After 5 updates of Idleing, stop Idleing
-		if (timeIdle > 5.0f && animator.GetBool ("isWandering")) {
-			Debug.Log ("I'm done idleing");
+		if (timeIdle > 5.0f) {
+			// Debug.Log ("I'm done idleing");
+			// nma.isStopped = false;
 		} else {
 			timeIdle = timeIdle + Time.deltaTime;
 		}

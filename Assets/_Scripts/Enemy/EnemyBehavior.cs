@@ -8,6 +8,7 @@ public class EnemyBehavior : MonoBehaviour {
     Animator anim;
     NavMeshAgent nma;
     GameObject escapePoint;
+    AudioSource aus;
 
     public UnityAtoms.GameObjectList CapturePointsList;
     public GameObject statusAttacking;
@@ -30,6 +31,7 @@ public class EnemyBehavior : MonoBehaviour {
 
     void Start () {
         player = GameObject.FindWithTag ("Player");
+        aus = GetComponent<AudioSource> ();
         nma = GetComponent<NavMeshAgent> ();
         anim = GetComponent<Animator> ();
         anim.SetInteger ("walletFullPercent", 0);
@@ -53,16 +55,15 @@ public class EnemyBehavior : MonoBehaviour {
     }
 
     private void OnTriggerEnter (Collider other) {
-        print ("HEY LISTEN " + other.gameObject.name);
         if (other.gameObject == currentCapturePoint) {
-            print ("I triggered my selected capture point");
+            // print ("HEY LISTEN I made it!" + other.gameObject.name);
             anim.SetBool ("NextToCapturePoint", true);
         }
     }
 
     private void OnTriggerExit (Collider other) {
         if (other.gameObject == currentCapturePoint) {
-            print ("BYEEE " + other.gameObject.name);
+            // print ("BYEEE! " + other.gameObject.name);
             anim.SetBool ("NextToCapturePoint", false);
         }
     }
@@ -118,12 +119,18 @@ public class EnemyBehavior : MonoBehaviour {
         SetStatusWandering (false);
     }
 
+    void PlayRandomSFX (AudioClip[] clips) {
+        var clip = clips[Random.Range (0, clips.Length)];
+        aus.PlayOneShot (clip);
+    }
+
     /* 
     // Action methods
     */
     public void Die () {
         HealPlayer ();
-        Destroy (gameObject);
+        PlayRandomSFX (dieSounds);
+        Destroy (gameObject, 1);
     }
 
     public void Escape () {
@@ -131,6 +138,7 @@ public class EnemyBehavior : MonoBehaviour {
     }
 
     public void GetSpooked () {
+        PlayRandomSFX (screamSounds);
         anim.SetBool ("isSpooked", true);
     }
 

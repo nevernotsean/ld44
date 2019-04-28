@@ -43,6 +43,7 @@ public class WanderingBehavior : StateMachineBehaviour {
 
     override public void OnStateExit (Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
         animator.gameObject.SendMessage ("SetStatusWandering", false);
+        animator.SetBool ("isWandering", false);
     }
 
     void WanderToRandomPoint () {
