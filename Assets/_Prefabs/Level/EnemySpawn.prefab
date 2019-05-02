@@ -47,7 +47,7 @@ MonoBehaviour:
     type: 3}
   CapturePointList: {fileID: 11400000, guid: 1a7cb991a6c3041a2b120ba8dc0914fc, type: 2}
   SpawnPoint: {fileID: 0}
-  waveAmount: 10
+  waveAmount: 99
   spawnWait: 1
   startWait: 1
   waveSpawned: 0

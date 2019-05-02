@@ -10,6 +10,7 @@ public class PlayerBehavior : MonoBehaviour {
     NavMeshAgent nma;
 
     public UnityAtoms.Vector3Variable LastMouseClickPosition;
+    public UnityAtoms.Vector3Variable CursorPosition;
 
     public AudioClip stepSound;
     public AudioClip jumpSound;
@@ -20,6 +21,12 @@ public class PlayerBehavior : MonoBehaviour {
     public UnityAtoms.BoolVariable isHoldingDownSneak;
 
     public UnityAtoms.IntVariable PlayerHealth;
+
+    public LayerMask ignoreSlam;
+
+    bool isLimp = false;
+    float timer = 5.0f;
+    Collider[] enemyColliders;
 
     // Start is called before the first frame update
     void Start () {
@@ -50,13 +57,44 @@ public class PlayerBehavior : MonoBehaviour {
             if (Time.timeScale != 1.0f)
                 Time.timeScale = 1.0f;
         }
+
+        if (!nma.pathPending && !nma.hasPath)
+            audioS.Stop ();
+
+        if (isLimp && timer <= 0) {
+            timer = timer - Time.deltaTime;
+        }
+
+        if (timer < 0) {
+            timer = 5.0f;
+            isLimp = false;
+        }
+    }
+
+    private void OnCollisionEnter (Collision other) {
+        if (rb.velocity.magnitude > 10 && other.gameObject.tag == "Enemy") {
+            // if (nma.enabled) return;
+            other.gameObject.SendMessage("Die");
+
+            enemyColliders = Physics.OverlapSphere(transform.position, 2.0f, ignoreSlam.value);
+            
+            foreach (var enemy in enemyColliders)
+            {
+                // print(enemy.gameObject.name);
+                if (enemy.gameObject.tag == "Enemy") 
+                    enemy.SendMessage("Die");
+            }
+        }
+
+        if (other.gameObject.tag == "oob")
+            nma.Warp(Vector3.zero);
     }
 
     // Inputs
     void UpdateInputs () {
         if (Input.GetMouseButtonDown (0)) {
             // print ("GetMouseButtonDown 1");
-            playStepSound ();
+            // playStepSound ();
             isHoldingDownJump.SetValue (true);
         }
 
@@ -69,6 +107,7 @@ public class PlayerBehavior : MonoBehaviour {
             // print ("GetMouseButtonDown 2");
             playJumpChargeSound ();
             isHoldingDownSneak.SetValue (true);
+            nma.enabled = false;
         }
 
         if (Input.GetMouseButtonUp (1)) {
@@ -81,15 +120,17 @@ public class PlayerBehavior : MonoBehaviour {
     // Actions
 
     void HopMove () {
-        rb.AddForce (Vector3.Lerp (transform.up, transform.forward, 0.2f) * rb.mass * 100, ForceMode.Impulse);
-    }
-
-    void SneekMove () {
-
+        print ("jump");
+        rb.AddForce (
+            Vector3.Lerp (Vector3.up, (CursorPosition.Value - transform.position).normalized, 0.75f) *
+            80 * rb.mass, ForceMode.Impulse);
+            isLimp = true;
     }
 
     void Die () {
-
+        nma.isStopped = true;
+        rb.AddExplosionForce (100, transform.position, 100.0f);
+        Destroy (gameObject, 1);
     }
 
     // SFX

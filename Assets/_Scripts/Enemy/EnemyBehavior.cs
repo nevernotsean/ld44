@@ -9,6 +9,7 @@ public class EnemyBehavior : MonoBehaviour {
     NavMeshAgent nma;
     GameObject escapePoint;
     AudioSource aus;
+    Rigidbody rb;
 
     public UnityAtoms.GameObjectList CapturePointsList;
     public GameObject statusAttacking;
@@ -16,6 +17,9 @@ public class EnemyBehavior : MonoBehaviour {
     public GameObject statusHunting;
     public GameObject statusFleeing;
     public GameObject statusWandering;
+
+    public GameObject Arms;
+    public GameObject corpsePrefab;
 
     public UnityAtoms.IntVariable PlayerHealth;
 
@@ -31,6 +35,7 @@ public class EnemyBehavior : MonoBehaviour {
 
     void Start () {
         player = GameObject.FindWithTag ("Player");
+        rb = GetComponent<Rigidbody>();
         aus = GetComponent<AudioSource> ();
         nma = GetComponent<NavMeshAgent> ();
         anim = GetComponent<Animator> ();
@@ -49,7 +54,7 @@ public class EnemyBehavior : MonoBehaviour {
     }
 
     private void OnDrawGizmos () {
-        if (nma.hasPath) {
+        if (nma != null && nma.hasPath) {
             Gizmos.DrawCube (nma.destination, Vector3.one * 3);
         }
     }
@@ -75,7 +80,8 @@ public class EnemyBehavior : MonoBehaviour {
         // print ("statusAttacking " + active);
         statusAttacking.SetActive (active);
 
-        // if (active)
+        if (active)
+            DropArms();
     }
 
     public void SetStatusEscaping (bool active) {
@@ -83,6 +89,7 @@ public class EnemyBehavior : MonoBehaviour {
         statusEscaping.SetActive (active);
 
         if (active) {
+            ForwardArms();
             nma.SetDestination (escapePoint.transform.position);
         }
     }
@@ -93,6 +100,7 @@ public class EnemyBehavior : MonoBehaviour {
 
         if (active) {
             GotoClosestCapture (true);
+            ForwardArms();
         }
     }
 
@@ -100,7 +108,8 @@ public class EnemyBehavior : MonoBehaviour {
         // print ("statusFleeing " + active);
         statusFleeing.SetActive (active);
 
-        // if (active)
+        if (active)
+            RaiseArms();
     }
 
     public void SetStatusWandering (bool active) {
@@ -128,9 +137,19 @@ public class EnemyBehavior : MonoBehaviour {
     // Action methods
     */
     public void Die () {
+        nma.enabled = false;
         HealPlayer ();
         PlayRandomSFX (dieSounds);
-        Destroy (gameObject, 1);
+        
+        
+        var body = Instantiate(corpsePrefab, transform.position, transform.rotation);
+            body.GetComponent<Rigidbody>().AddExplosionForce (5, transform.position, 1.0f, 0.5f, ForceMode.Force);
+
+        foreach (Transform child in transform)
+            child.gameObject.SetActive(false);
+
+        Destroy(gameObject, 1);
+        Destroy(body, 10);
     }
 
     public void Escape () {
@@ -164,6 +183,18 @@ public class EnemyBehavior : MonoBehaviour {
     public void HealPlayer () {
         PlayerHealth.SetValue (PlayerHealth.Value + holdingCash);
         holdingCash = 0;
+    }
+
+    public void RaiseArms(){
+        Arms.transform.rotation = Quaternion.Euler(-180,0,0);
+    }
+
+    public void ForwardArms(){
+        Arms.transform.rotation = Quaternion.Euler(-90,0,0);
+    }
+
+    public void DropArms(){
+        Arms.transform.rotation = Quaternion.Euler(0,0,0);
     }
 
     /* 

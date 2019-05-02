@@ -29,6 +29,7 @@ public class MoveToPosition : MonoBehaviour
         // if (!nma.navMeshOwner) {
         //     nma.Warp(Position.Value);
         // } else {
+            nma.enabled = true;
             nma.SetDestination(Position.Value);
         // }
     }
